@@ -4,7 +4,6 @@ const cors = require('cors');
 const mongoose = require('mongoose')
 const useRouter = require('./routes/user.route')
 const auth = require('./routes/auth.route')
-require("dotenv").config();
 
 mongoose.connect('mongodb://localhost:27017/real-estate',{
 }).then(()=>{

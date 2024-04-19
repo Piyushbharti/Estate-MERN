@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt')
 const errorHandler = require("../utilis/error")
 const jwt = require('jsonwebtoken')
 const User = require('../models/user.model')
+require("dotenv").config();
 
 const signup = async(req, res, next) => {
     try{
@@ -22,9 +23,9 @@ const signIn = async(req, res, next) => {
         if(!validUser) return next(errorHandler(404, 'User not Found'))
         const validPassword = bcrypt.compareSync(password, validUser.password)
         if(!validPassword) return next(errorHandler(401, 'Wrong credentials!'))
-        console.log('process.env', process.env.JWT_SECRET)
         const token = jwt.sign({id: validUser._id}, process.env.JWT_SECRET)
-        res.cookie('access_token', token, {httpOnly: true}).status(200).json(validUser)
+        const {password:pass, ...rest} = validUser._doc
+        res.cookie('access_token', token, {httpOnly: true}).status(200).json(rest)
     }catch(error){
         next(error)
     }
